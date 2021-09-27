@@ -70,11 +70,12 @@ def read_minor_minimals():
 
 
 
-def display_connected_minimal_graphs(spec_num):
+def display_connected_minimal_graphs(spec_num, minimals_dict=None):
     """INPUT: spec_num - the spectator number
     OUTPUT: Prints the connected minor-minimal graphs with spectator number equal to spec_num"""
-
-    minimals_dict = read_minor_minimals()
+    
+    if minimals_dict is None:
+        minimals_dict = read_minor_minimals()
     
     if spec_num in [5, 6, 7]:
         num = len(minimals_dict[f'{spec_num}_spectators'])

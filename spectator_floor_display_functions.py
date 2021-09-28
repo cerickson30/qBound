@@ -70,20 +70,12 @@ def read_minor_minimals():
 
 
 
-<<<<<<< HEAD
-def display_connected_minimal_graphs(spec_num):
-    """INPUT: spec_num - the spectator number
-    OUTPUT: Prints the connected minor-minimal graphs with spectator number equal to spec_num"""
-
-    minimals_dict = read_minor_minimals()
-=======
 def display_connected_minimal_graphs(spec_num, minimals_dict=None):
     """INPUT: spec_num - the spectator number
     OUTPUT: Prints the connected minor-minimal graphs with spectator number equal to spec_num"""
     
     if minimals_dict is None:
         minimals_dict = read_minor_minimals()
->>>>>>> a8c8afd387aa21b1f5bd175c3defd22876647efa
     
     if spec_num in [5, 6, 7]:
         num = len(minimals_dict[f'{spec_num}_spectators'])
@@ -156,14 +148,14 @@ def get_canonical_graph(graph):
     try:
         mat = Matrix(graph)
         G = Graph(mat)
-        g6_str = G.canonical_label().graph6_string()
+        g6_str = G.canonical_label(algorithm='sage').graph6_string()
     except TypeError:
         if type(graph) == str:
             G = Graph(graph)
-            g6_str = G.canonical_label().graph6_string()
+            g6_str = G.canonical_label(algorithm='sage').graph6_string()
         elif type(graph) == Graph:
             G = graph
-            g6_str = G.canonical_label().graph6_string()
+            g6_str = G.canonical_label(algorithm='sage').graph6_string()
             
     return G, g6_str
 

@@ -77,7 +77,7 @@ def display_connected_minimal_graphs(spec_num, minimals_dict=None):
     if minimals_dict is None:
         minimals_dict = read_minor_minimals()
     
-    if spec_num in [5, 6, 7]:
+    if spec_num >= 5:
         num = len(minimals_dict[f'{spec_num}_spectators'])
         message = f"""Warning: There are {num} connected minor-minimal graphs on at most 10 vertices with spectator number {spec_num},
 are you sure you want to proceed?
@@ -113,7 +113,7 @@ Enter 'Yes' to print all {num} of the graphs.\n"""
         ga = graphics_array((G1.plot(title=row[0]), G2.plot(title=row[1])))
         ga.show(figsize=(15,3))
         print('\n')
-    else:
+    elif len(graph_list) == 1:
         row = [graph_list.pop(0)]
         G1 = Graph(row[0])
         counter += 1

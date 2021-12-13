@@ -1,4 +1,10 @@
 def Glabel(G):
+    """
+    Returns the graph6_string of the canonical labelling of graph G using the sage algorithm
+    to determine the canonical labelling.
+    
+    :param G: A graph object.
+    """
     return G.canonical_label(algorithm='sage')().graph6_string()
 
 
@@ -7,15 +13,39 @@ def Glabel(G):
 ##########################################################################################
 
 def write_seen_dict(seen_dict, path_prefix='data'):
+    """
+    DEPRECATED - Use the function write_partial_seen_dict()
+    
+    Writes the dictionary of graph6_strings of graphs whose spectator minor floor number has 
+    been calculated to the file seen_dict.txt and backup file seen_dict_backup.txt in the data directory.
+    
+    :param seen_dict: The dictionary of graphs whose spectator minor floor number has been calculated.
+    
+    :param path_prefix: The directory in which to store the seen_dict.txt and seen_dict_backup.txt files.
+            By default, saves these files in a directory called 'data'
+    """
     with open(path_prefix + f'/seen_dict_backup.txt', 'w') as outfile:
         outfile.write(str(seen_dict))
         
-    # Just in case there's an interuption while the connection is open, make a backup
+    # In case there's an interuption while the connection is open, make a backup
     with open(path_prefix + f'/seen_dict.txt', 'w') as outfile:
         outfile.write(str(seen_dict))
 
 
 def get_last_seen_dict_numbers(path_prefix='data'):
+    """
+    Reads the names of the files in which the lists of graph6_strings of graphs whose spectator minor 
+    floor number has been calculated in order to identify the number of vertices and edges in the last 
+    graph whose spectator minor floor number was successfully calculated and saved to file.
+    
+    This is used to bound the loop that is used to rebuild the dictionary of all graphs whose 
+    spectator minor floor number has been calculated from the files partitioned by number of
+    vertices and edges.
+    
+    :param path_prefix: The directory in which to find the partitioned files that can be used to rebuild
+            the dictionary of graphs whose spectator minor floor number has been calculated.
+            By default, saves these files in a directory called 'data'
+    """
     import os
     
     files_list = os.listdir(path_prefix + '/seen_dict')
@@ -41,10 +71,22 @@ def get_last_seen_dict_numbers(path_prefix='data'):
     return (max_n, edges)
 
 
-## Read partial seen_dict for a given number of vertices and edges
+
 def read_partial_seen_dict(num_verts, num_edges, path_prefix='data'):
+    """
+    Reads a file (or backup) containing a list of graph6_strings of graphs on num_verts vertices 
+    and num_edges edges whose spectator minor floor number has been calculated and saved.
+    
+    :param num_verts: The number of vertices that each graph listed in the file contains.
+    
+    :param num_edges: The number of edges that each graph listed in the file contains.
+    
+    :param path_prefix: The directory in which to find the partitioned files that can be used to rebuild
+            the dictionary of graphs whose spectator minor floor number has been calculated.
+            By default, reads looks for these files in a directory called 'data'
+    """
     try:
-        # try the primary file
+        # Try the primary file
         with open(f'{path_prefix}/seen_dict/seen_dict_{num_verts}_verts_{num_edges}_edges.txt', 'r') as infile:
             return eval(infile.read())
     except:
@@ -54,15 +96,44 @@ def read_partial_seen_dict(num_verts, num_edges, path_prefix='data'):
         
         
 def write_partial_seen_dict(num_verts, num_edges, seen_dict, path_prefix='data'):
+    """
+    Writes a file (and backup) containing a list of graph6_strings of graphs on num_verts vertices
+    and num_edges edges whose spectator minor floor number has been calculated and saved.
+    
+    :param num_verts: The number of vertices that each graph listed in the file contains.
+    
+    :param num_edges: The number of edges that each graph listed in the file contains.
+    
+    :param seen_dict: A nested dictionary that contains lists of graphs whose spectator minor floor number
+            has been calculated.
+    
+    :param path_prefix: The directory in which to save the partitioned files that can be used to rebuild
+            the dictionary of graphs whose spectator minor floor number has been calculated.
+            By default, saves these files in a directory called 'data'
+    """
     with open(f'{path_prefix}/seen_dict/seen_dict_{num_verts}_verts_{num_edges}_edges.txt', 'w') as outfile:
         outfile.write(str(seen_dict[f'{num_verts}_verts'][f'{num_edges}_edges']))
     
-    # Just in case there's an interuption while the connection is open, make a backup
+    # In case there's an interuption while the connection is open, make a backup
     with open(f'{path_prefix}/seen_dict/seen_dict_{num_verts}_verts_{num_edges}_edges-backup.txt', 'w') as outfile:
         outfile.write(str(seen_dict[f'{num_verts}_verts'][f'{num_edges}_edges'])) 
         
 
 def init_seen_dict(path_prefix='data'):
+    """
+    Returns the nested dictionary containing lists of graph6_strings of graphs whose spectator minor
+    floor number has been calculated and saved after rebuilding this dictionary from the partitioned
+    files read by the read_partial_seen_dict() function.
+    
+    The outer dictionary has keys of the form '4_verts' and the value associated with that key is a
+    dictionary whose keys are of the form '5_edges'. The value associated with seen_dict['4_verts']['5_edges']
+    is a list of graph6_strings of graphs on 4 vertices and 5 edges whose spectator minor floor number has been
+    calculated and saved to a file.
+    
+    :param path_prefix: The directory in which to find the partitioned files that can be used to rebuild
+            the dictionary of graphs whose spectator minor floor number has been calculated.
+            By default, reads looks for these files in a directory called 'data'
+    """
     max_n, edcount = get_last_seen_dict_numbers(path_prefix)
 
     vertex_keys = [f'{nn}_verts' for nn in range(11)]
@@ -80,12 +151,10 @@ def init_seen_dict(path_prefix='data'):
         # add lower vertex number graphs
         for n_verts in range(2, max_n):
             for m_edges in range(n_verts*(n_verts-1)//2, 0, -1):
-    #             print(n_verts, m_edges)
                 seen_dict[f'{n_verts}_verts'][f'{m_edges}_edges'] = read_partial_seen_dict(n_verts, m_edges, path_prefix)
 
         # add previously computed for max_n
         for m_edges in range(max_n*(max_n-1)//2, edcount-1, -1):
-    #         print(max_n, m_edges)
             seen_dict[f'{max_n}_verts'][f'{m_edges}_edges'] = read_partial_seen_dict(max_n, m_edges, path_prefix)
     
     return seen_dict
@@ -97,6 +166,19 @@ def init_seen_dict(path_prefix='data'):
 ##########################################################################################
 
 def write_completed_dict(completed_dict, path_prefix='data'):
+    """
+    DEPRECATED - Use the function write_partial_completed_dict()
+    
+    Writes the dictionary of graph6_strings of graphs that have been checked for whether they are
+    minor minimal with respect to the spectator minor floor number to the file completed_dict.txt and 
+    backup file completed_dict_backup.txt in the data directory.
+    
+    :param completed_dict: The dictionary of graphs that have been checked for whether they are minor
+            minimal with respect to the spectator minor floor number.
+    
+    :param path_prefix: The directory in which to store the completed_dict.txt and completed_dict_backup.txt
+            files. By default, saves these files in a directory called 'data'
+    """
     with open(path_prefix + f'/completed_dict_backup.txt', 'w') as outfile:
         outfile.write(str(completed_dict))
         
@@ -106,6 +188,18 @@ def write_completed_dict(completed_dict, path_prefix='data'):
 
 
 def get_last_completed_dict_numbers(path_prefix='data'):
+    """
+    Reads the names of the files in which the lists of graph6_strings of graphs that have been checked
+    for minor minimality with respect to the spectator minor floor number in order to identify the number
+    of vertices and edges in the last graph whose potential minor minimality was successfully checked.
+    
+    This is used to bound the loop that is used to rebuild the dictionary of all graphs whose 
+    potential minor minimality has been checked from the files partitioned by number of vertices and edges.
+    
+    :param path_prefix: The directory in which to find the partitioned files that can be used to rebuild
+            the dictionary of graphs whose spectator minor floor number has been calculated.
+            By default, saves these files in a directory called 'data'
+    """
     import os
     
     files_list = os.listdir(path_prefix + '/completed_dict')
@@ -133,6 +227,19 @@ def get_last_completed_dict_numbers(path_prefix='data'):
 
 ## Read partial seen_dict for a given number of vertices and edges
 def read_partial_completed_dict(num_verts, num_edges, path_prefix='data'):
+    """
+    Reads a file (or backup) containing a list of graph6_strings of graphs on num_verts vertices 
+    and num_edges edges that have had their potential minor minimality with respect to the spectator
+    minor floor number checked.
+    
+    :param num_verts: The number of vertices that each graph listed in the file contains.
+    
+    :param num_edges: The number of edges that each graph listed in the file contains.
+    
+    :param path_prefix: The directory in which to find the partitioned files that can be used to rebuild
+            the dictionary of graphs whose spectator minor floor number has been calculated.
+            By default, reads looks for these files in a directory called 'data'
+    """
     try:
         # try the primary file
         with open(f'{path_prefix}/completed_dict/completed_dict_{num_verts}_verts_{num_edges}_edges.txt', 'r') as infile:
@@ -144,6 +251,22 @@ def read_partial_completed_dict(num_verts, num_edges, path_prefix='data'):
         
         
 def write_partial_completed_dict(num_verts, num_edges, completed_dict, path_prefix='data'):
+    """
+    Writes a file (and backup) containing a list of graph6_strings of graphs on num_verts vertices 
+    and num_edges edges that have had their potential minor minimality with respect to the spectator
+    minor floor number checked.
+    
+    :param num_verts: The number of vertices that each graph listed in the file contains.
+    
+    :param num_edges: The number of edges that each graph listed in the file contains.
+    
+    :param completed_dict: A nested dictionary that contains lists of graphs that have been checked for
+            minor minimality.
+    
+    :param path_prefix: The directory in which to save the partitioned files that can be used to rebuild
+            the dictionary of graphs whose spectator minor floor number has been calculated.
+            By default, saves these files in a directory called 'data'
+    """
     with open(f'{path_prefix}/completed_dict/completed_dict_{num_verts}_verts_{num_edges}_edges.txt', 'w') as outfile:
         outfile.write(str(completed_dict[f'{num_verts}_verts'][f'{num_edges}_edges']))
     
@@ -153,6 +276,19 @@ def write_partial_completed_dict(num_verts, num_edges, completed_dict, path_pref
         
 
 def init_completed_dict(path_prefix='data'):
+    """
+    Returns the nested dictionary containing lists of graph6_strings of graphs that have been checked for 
+    minor minimality with respect to the spectator minor floor number after rebuilding this dictionary from 
+    the partitioned files read by the read_partial_completed_dict() function.
+    
+    The outer dictionary has keys of the form '4_verts' and the value associated with that key is a
+    dictionary whose keys are of the form '5_edges'. The value associated with completed_dict['4_verts']['5_edges']
+    is a list of graph6_strings of graphs on 4 vertices and 5 edges that have been checked for minor minimality.
+    
+    :param path_prefix: The directory in which to find the partitioned files that can be used to rebuild
+            the dictionary of graphs that have been checked for minor minimality. By default, reads looks
+            for these files in a directory called 'data'
+    """
     max_n, edcount = get_last_completed_dict_numbers(path_prefix)
 
     vertex_keys = [f'{nn}_verts' for nn in range(11)]
@@ -170,12 +306,10 @@ def init_completed_dict(path_prefix='data'):
         # add lower vertex number graphs
         for n_verts in range(2, max_n):
             for m_edges in range(n_verts*(n_verts-1)//2, 0, -1):
-    #             print(n_verts, m_edges)
                 completed_dict[f'{n_verts}_verts'][f'{m_edges}_edges'] = read_partial_completed_dict(n_verts, m_edges, path_prefix)
 
         # add previously computed for max_n
         for m_edges in range(max_n*(max_n-1)//2, edcount-1, -1):
-    #         print(max_n, m_edges)
             completed_dict[f'{max_n}_verts'][f'{m_edges}_edges'] = read_partial_completed_dict(max_n, m_edges, path_prefix)
     
     return completed_dict

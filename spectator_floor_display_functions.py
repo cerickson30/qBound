@@ -1,10 +1,12 @@
 def get_full_uspcm_dict():
-    """Access the GitHub repo to put together the complete uspcm_dict,
-the dictionary of connected graphs on up to 10 vertices (inclusive) with the spectator number for each graph.
+    """
+    Access the GitHub repo to put together the complete uspcm_dict, the dictionary of connected graphs 
+    on up to 10 vertices (inclusive) with the spectator number for each graph.
 
-This is a nested dictionary, to access, e.g., the dictionary of connected graphs on 6 vertices and 10 edges, use
-uspcm_dict['6_verts']['10_edges']. The innermost dictionary's keys are graph6_strings and the values are the spectator
-number for that graph."""
+    This is a nested dictionary, to access, e.g., the dictionary of connected graphs on 6 vertices and 10 edges, 
+    use uspcm_dict['6_verts']['10_edges']. The innermost dictionary's keys are graph6_strings and the values are 
+    the spectator number for that graph.
+    """
     
     import requests
 
@@ -37,12 +39,18 @@ number for that graph."""
 
 
 def get_partial_uspcm_dict(num_verts, num_edges):
-    """Access the GitHub repo to get just the part of the uspcm_dict for num_verts vertices and num_edges edges,
+    """
+    Access the GitHub repo to get just the part of the uspcm_dict for num_verts vertices and num_edges edges,
     where num_verts is at most 10.
 
-This is a nested dictionary, to access, e.g., the dictionary of connected graphs on 6 vertices and 10 edges, use
-uspcm_dict['6_verts']['10_edges']. The innermost dictionary's keys are graph6_strings and the values are the spectator
-number for that graph."""
+    This is a nested dictionary, to access, e.g., the dictionary of connected graphs on 6 vertices and 10 edges,
+    use uspcm_dict['6_verts']['10_edges']. The innermost dictionary's keys are graph6_strings and the values are
+    the spectator number for that graph.
+    
+    :param num_verts: The number of vertices.
+    
+    :param num_edges: The number of edges.
+    """
     
     import requests
 
@@ -61,7 +69,10 @@ number for that graph."""
 
 
 def read_minor_minimals():
-    """Returns the dictionary of spectator number minor-minimal graphs from the GitHub repo"""
+    """
+    Returns the dictionary of graphs which are minor minimal with respect to the spectator minor floor 
+    number from the GitHub repo.
+    """
     import requests
     
     url = 'https://raw.githubusercontent.com/cerickson30/qBound/main/data/minimals_dict.txt'
@@ -71,8 +82,16 @@ def read_minor_minimals():
 
 
 def display_connected_minimal_graphs(spec_num, minimals_dict=None):
-    """INPUT: spec_num - the spectator number
-    OUTPUT: Prints the connected minor-minimal graphs with spectator number equal to spec_num"""
+    """
+    Prints the connected minor-minimal graphs with spectator number equal to spec_num.
+    
+    :param spec_num: The spectator minor floor number.
+    
+    :param minimals_dict: Optional argument. A dictionary of minor minimal graphs where the keys are the
+            spectator minor floor number and the associated value is the set of graphs which are minor 
+            minimal with respect to that spectator minor floor number. If not provided, then the
+            read_minor_minimals() function will be used to fetch the dictionary from the github repo.
+    """
     
     if minimals_dict is None:
         minimals_dict = read_minor_minimals()
@@ -124,10 +143,15 @@ Enter 'Yes' to print all {num} of the graphs.\n"""
         
         
 def get_spectator_floor(graph, uspcm_dict=None):
-    """INPUT: graph: A graph, graph6_string, or adjacency matrix for a connected graph on at most 10 vertices
-uspcm_dict: A dictionary of spectator floor numbers, either the complete dictionary or partial dictionary with
-the spectator floor numbers for graphs on the number of vertices and edges that the graph argument has.
-OUTPUT: The spectator floor number of the graph.
+    """
+    Returns the spectator floor number of the given graph.
+    
+    :param graph: A graph, graph6_string, or adjacency matrix for a connected graph on at most 10 vertices.
+    
+    :param uspcm_dict: Optional argument. A dictionary of spectator floor numbers, either the complete 
+            dictionary or partial dictionary with the spectator floor numbers for graphs on the number of 
+            vertices and edges that the graph argument has. If not provided, the get_partial_uspcm_dict() 
+            function will be used to fetch the partial dictionary from the github repo.
     """
     G, g6_str = get_canonical_graph(graph)
         
@@ -145,6 +169,11 @@ OUTPUT: The spectator floor number of the graph.
 
 
 def get_canonical_graph(graph):
+    """
+    Returns the graph and graph6_string for the canonical labelling of the graph passed into this function.
+    
+    :param graph: A graph object, graph6_string, or adjacency matrix for a graph.
+    """
     try:
         mat = Matrix(graph)
         G = Graph(mat)
@@ -162,7 +191,13 @@ def get_canonical_graph(graph):
         
 
 def has_minor(G, H):
-    """Determines if graph H is a minor of graph G"""
+    """
+    Determines if graph H is a minor of graph G
+    
+    :param G: A graph object, graph6_string, or adjacency matrix for a graph.
+    
+    :param H: A graph object, graph6_string, or adjacency matrix for a graph.
+    """
     g,_ = get_canonical_graph(G)
     h,_ = get_canonical_graph(H)
             
@@ -175,10 +210,23 @@ def has_minor(G, H):
     
 
 def find_minimal_representation(graph, uspcm_dict=None, minimals_dict=None):
-    """INPUT: graph: A graph, graph6_string, or adjacency matrix for a connected graph on at most 10 vertices
-uspcm_dict: A dictionary of spectator floor numbers, either the complete dictionary or partial dictionary with
-the spectator floor numbers for graphs on the number of vertices and edges that the graph argument has.
-OUTPUT: The spectator floor number of the graph.
+    """
+    Determines if the graph, G, passed in as an argument is minor minimal, if G is minor minimal, then its
+    graph6_string is returned. If G is not minor minimal, then the function returns the graph6_string of
+    a minor of G which has the same spectator minor floor number as G and is minor minimal with respect to
+    that spectator minor floor number.
+    
+    :param graph: A graph, graph6_string, or adjacency matrix for a connected graph on at most 10 vertices
+    
+    :param uspcm_dict: Optional argument. A dictionary of spectator floor numbers, either the complete 
+            dictionary or partial dictionary with the spectator floor numbers for graphs on the same number 
+            of vertices and edges as G. If not provided, the get_partial_uspcm_dict() function will be used 
+            to fetch the partial dictionary from the github repo.
+            
+    :param minimals_dict: Optional argument. A dictionary of minor minimal graphs where the keys are the
+            spectator minor floor number and the associated value is the set of graphs which are minor 
+            minimal with respect to that spectator minor floor number. If not provided, then the
+            read_minor_minimals() function will be used to fetch the dictionary from the github repo.
     """
     G, g6_str = get_canonical_graph(graph)
         

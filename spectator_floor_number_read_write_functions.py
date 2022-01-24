@@ -16,8 +16,8 @@ def write_seen_dict(seen_dict, path_prefix='data'):
     """
     DEPRECATED - Use the function write_partial_seen_dict()
     
-    Writes the dictionary of graph6_strings of graphs whose spectator minor floor number has 
-    been calculated to the file seen_dict.txt and backup file seen_dict_backup.txt in the data directory.
+    Writes the dictionary of graph6_strings of graphs whose spectator minor floor number has been
+    calculated to the file seen_dict.txt and backup file seen_dict_backup.txt in the data directory.
     
     :param seen_dict: The dictionary of graphs whose spectator minor floor number has been calculated.
     
@@ -34,14 +34,13 @@ def write_seen_dict(seen_dict, path_prefix='data'):
 
 def get_last_seen_dict_numbers(path_prefix='data'):
     """
-    Returns the number of vertices and number of edges of the last successfully processed graph by reading
-    the names of the files in which the sets of graph6_strings of graphs whose spectator minor floor number
-    has been calculated in order to identify the number of vertices and edges in the last graph whose
-    spectator minor floor number was successfully calculated and saved to file.
+    Returns the number of vertices and number of edges of the last successfully processed graph by 
+    reading the names of the files in which the sets of graph6_strings of graphs whose spectator minor 
+    floor number has been calculated in order to identify the number of vertices and edges in the last 
+    graph whose spectator minor floor number was successfully calculated and saved to file.
     
-    This is used to bound the loop that is used to rebuild the dictionary of all graphs whose 
-    spectator minor floor number has been calculated from the files partitioned by number of
-    vertices and edges.
+    This is used to bound the loop that is used to rebuild the dictionary of all graphs whose spectator
+    minor floor number has been calculated from the files partitioned by number of vertices and edges.
     
     :param path_prefix: The directory in which to find the partitioned files that can be used to rebuild
             the dictionary of graphs whose spectator minor floor number has been calculated.
@@ -105,8 +104,8 @@ def write_partial_seen_dict(num_verts, num_edges, seen_dict, path_prefix='data')
     
     :param num_edges: The number of edges that each graph listed in the file contains.
     
-    :param seen_dict: A nested dictionary that contains lists of graphs whose spectator minor floor number
-            has been calculated.
+    :param seen_dict: A nested dictionary that contains lists of graphs whose spectator minor floor
+            number has been calculated.
     
     :param path_prefix: The directory in which to save the partitioned files that can be used to rebuild
             the dictionary of graphs whose spectator minor floor number has been calculated.
@@ -128,8 +127,8 @@ def init_seen_dict(path_prefix='data'):
     
     The outer dictionary has keys of the form '4_verts' and the value associated with that key is a
     dictionary whose keys are of the form '5_edges'. The value associated with seen_dict['4_verts']['5_edges']
-    is a set of graph6_strings of graphs on 4 vertices and 5 edges whose spectator minor floor number has been
-    calculated and saved to a file.
+    is a set of graph6_strings of graphs on 4 vertices and 5 edges whose spectator minor floor number 
+    has been calculated and saved to a file.
     
     :param path_prefix: The directory in which to find the partitioned files that can be used to rebuild
             the dictionary of graphs whose spectator minor floor number has been calculated.
@@ -279,9 +278,9 @@ def write_partial_completed_dict(num_verts, num_edges, completed_dict, path_pref
 
 def init_completed_dict(path_prefix='data'):
     """
-    Returns the nested dictionary containing lists of graph6_strings of graphs that have been checked for 
-    minor minimality with respect to the spectator minor floor number after rebuilding this dictionary from 
-    the partitioned files read by the read_partial_completed_dict() function.
+    Returns the nested dictionary containing lists of graph6_strings of graphs that have been checked 
+    for minor minimality with respect to the spectator minor floor number after rebuilding this dictionary 
+    from the partitioned files read by the read_partial_completed_dict() function.
     
     The outer dictionary has keys of the form '4_verts' and the value associated with that key is a
     dictionary whose keys are of the form '5_edges'. The value associated with 
@@ -597,9 +596,9 @@ def get_spectator_number_dictionaries(path_prefix='data'):
     from saved files or initialized if no saved files exist.
     
     uspcm_dict: Nested dictionary of the form 
-            uspcm_dict[f'{nn}_verts'][f'{ee}_edges'][graph6_string] = spectator minor floor number, where nn is
-            the number of vertices, ee is the number of edges, and graph6_string is the graph6_string of that
-            graph.
+            uspcm_dict[f'{nn}_verts'][f'{ee}_edges'][graph6_string] = spectator minor floor number, where 
+            nn is the number of vertices, ee is the number of edges, and graph6_string is the graph6_string 
+            of that graph.
     
     minimals_dict: Dictionary of the form minimals_dict[f'{kk}_spectators'] = set of graphs which have
             spectator minor floor number equal to kk and which are minor minimal with respect to the spectator

@@ -1,7 +1,7 @@
 def Glabel(G):
     """
-    Returns the graph6_string of the canonical labelling of graph G using the sage algorithm
-    to determine the canonical labelling.
+    Returns the graph6_string of the canonical labeling of graph G using the sage algorithm
+    to determine the canonical labeling.
     
     :param G: A graph object.
     """

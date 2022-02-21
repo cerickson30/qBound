@@ -20,7 +20,7 @@ def get_full_uspcm_dict():
         filename = f'uspcm_dict_{num_verts}_verts_{0}_edges.txt'
 
         file_url = f'{url_path}/{filename}'
-        response = response = requests.get(file_url)
+        response = requests.get(file_url)
         uspcm_dict[f'{num_verts}_verts'][f'{0}_edges'] = eval(response.text)
 
 
@@ -31,7 +31,7 @@ def get_full_uspcm_dict():
             filename = f'uspcm_dict_{num_verts}_verts_{num_edges}_edges.txt'
 
             file_url = f'{url_path}/{filename}'
-            response = response = requests.get(file_url)
+            response = requests.get(file_url)
             uspcm_dict[f'{num_verts}_verts'][f'{num_edges}_edges'] = eval(response.text)
             
     return uspcm_dict
@@ -59,7 +59,7 @@ def get_partial_uspcm_dict(num_verts, num_edges):
     filename = f'uspcm_dict_{num_verts}_verts_{num_edges}_edges.txt'
 
     file_url = f'{url_path}/{filename}'
-    response = response = requests.get(file_url)
+    response = requests.get(file_url)
     
     uspcm_dict[f'{num_verts}_verts'] = {}
     uspcm_dict[f'{num_verts}_verts'][f'{num_edges}_edges'] = eval(response.text)

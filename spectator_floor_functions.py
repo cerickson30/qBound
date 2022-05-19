@@ -103,7 +103,7 @@ def check_minimality(G, uspcm_dict):
     
     
     
-def determine_minimals(nn, minimals_dict=None, uspcm_dict=None, save=False, path_prefix='data'):
+def determine_minimals(nn, num_edges, minimals_dict=None, uspcm_dict=None, completed_dict=None, save=False, path_prefix='data'):
     
     if uspcm_dict is None:
         uspcm_dict = get_full_uspcm_dict()
@@ -113,40 +113,42 @@ def determine_minimals(nn, minimals_dict=None, uspcm_dict=None, save=False, path
         minimals_dict = dict(zip(minimals_dict_keys, [set() for kk in range(10)]))
         
     
-    for edge_key in uspcm_dict.get(f'{nn}_verts'):
-        if save==True:
-            one_percent = max(len(uspcm_dict.get(f'{nn}_verts').get(edge_key)) // 100, 1)
-            fraction_percent = max(len(uspcm_dict.get(f'{nn}_verts').get(edge_key)) // 1000, 1)
+    # for edge_key in uspcm_dict.get(f'{nn}_verts'):
+    if save==True:
+        # print(f'{nn}_verts', f'{num_edges}_edges')
+        one_percent = max(len(uspcm_dict.get(f'{nn}_verts').get(f'{num_edges}_edges')) // 100, 1)
+        fraction_percent = max(len(uspcm_dict.get(f'{nn}_verts').get(f'{num_edges}_edges')) // 1000, 1)
 
-            if fraction_percent < 500:
-                save_percent = one_percent
-            else:
-                save_percent = fraction_percent
-            
-            
-        num_edges = edge_key.split('_')[0]
+        if fraction_percent < 500:
+            save_percent = one_percent
+        else:
+            save_percent = fraction_percent
+
+
+    # num_edges = edge_key.split('_')[0]
 #         print(f'Working on graphs on {nn} vertices and {num_edges} edges...')
-        
-        num_graphs_worked = 0
-        
-        for g6_str in progressBar(uspcm_dict.get(f'{nn}_verts').get(edge_key), 
-                            prefix = f"2nd pass: nn={nn}, ee={num_edges}:", 
-                            suffix = '', length = 40):
-            if Graph(g6_str).is_connected():
-#                 print(g6_str)
-                result = check_minimality(g6_str, uspcm_dict)
-                if result is not None:
-                    G_spec_num = result[1]
-                    minimals_dict.get(f'{G_spec_num}_spectators').add(g6_str)
 
-            num_graphs_worked += 1
+    num_graphs_worked = 0
+
+    for g6_str in progressBar(uspcm_dict.get(f'{nn}_verts').get(f'{num_edges}_edges'), 
+                        prefix = f"2nd pass: nn={nn}, ee={num_edges}:", 
+                        suffix = '', length = 40):
+        if Graph(g6_str).is_connected():
+#                 print(g6_str)
+            result = check_minimality(g6_str, uspcm_dict)
+            if result is not None:
+                G_spec_num = result[1]
+                minimals_dict.get(f'{G_spec_num}_spectators').add(g6_str)
                 
-            if num_graphs_worked % save_percent == 0:
-                with open(path_prefix +
-                  f'/minimals_dict/minimals_dict_{nn}_verts_{num_edges}_edges.txt', 'w') as outfile:
-                    outfile.write(str(minimals_dict))
+        completed_dict.get(f'{nn}_verts').get(f'{num_edges}_edges').add(g6_str)
+        num_graphs_worked += 1
+
+        if num_graphs_worked % save_percent == 0:
+            with open(path_prefix +
+              f'/minimals_dict/minimals_dict_{nn}_verts_{num_edges}_edges.txt', 'w') as outfile:
+                outfile.write(str(minimals_dict))
                     
-    return minimals_dict
+    return minimals_dict, completed_dict
 
 
 

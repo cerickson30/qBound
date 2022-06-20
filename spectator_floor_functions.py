@@ -148,6 +148,8 @@ def determine_minimals(nn, num_edges, minimals_dict=None, uspcm_dict=None, compl
               f'/minimals_dict/minimals_dict_{nn}_verts_{num_edges}_edges.txt', 'w') as outfile:
                 outfile.write(str(minimals_dict))
             write_partial_completed_dict(nn, num_edges, completed_dict, path_prefix)
+    
+    write_partial_completed_dict(nn, num_edges, completed_dict, path_prefix)
                     
     return minimals_dict, completed_dict
 

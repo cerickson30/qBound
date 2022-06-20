@@ -12,26 +12,6 @@ def Glabel(G):
 #################################### Seen Dict ###########################################
 ##########################################################################################
 
-def write_seen_dict(seen_dict, path_prefix='data'):
-    """
-    DEPRECATED - Use the function write_partial_seen_dict()
-    
-    Writes the dictionary of graph6_strings of graphs whose spectator minor floor number has been
-    calculated to the file seen_dict.txt and backup file seen_dict_backup.txt in the data directory.
-    
-    :param seen_dict: The dictionary of graphs whose spectator minor floor number has been calculated.
-    
-    :param path_prefix: The directory in which to store the seen_dict.txt and seen_dict_backup.txt files.
-            By default, saves these files in a directory called 'data'
-    """
-    with open(path_prefix + f'/seen_dict_backup.txt', 'w') as outfile:
-        outfile.write(str(seen_dict))
-        
-    # In case there's an interuption while the connection is open, make a backup
-    with open(path_prefix + f'/seen_dict.txt', 'w') as outfile:
-        outfile.write(str(seen_dict))
-
-
 def get_last_seen_dict_numbers(path_prefix='data'):
     """
     Returns the number of vertices and number of edges of the last successfully processed graph by 
@@ -164,28 +144,6 @@ def init_seen_dict(path_prefix='data'):
 ##########################################################################################
 ################################ Completed Dict ##########################################
 ##########################################################################################
-
-def write_completed_dict(completed_dict, path_prefix='data'):
-    """
-    DEPRECATED - Use the function write_partial_completed_dict()
-    
-    Writes the dictionary of graph6_strings of graphs that have been checked for whether they are
-    minor minimal with respect to the spectator minor floor number to the file completed_dict.txt and 
-    backup file completed_dict_backup.txt in the data directory.
-    
-    :param completed_dict: The dictionary of graphs that have been checked for whether they are minor
-            minimal with respect to the spectator minor floor number.
-    
-    :param path_prefix: The directory in which to store the completed_dict.txt and completed_dict_backup.txt
-            files. By default, saves these files in a directory called 'data'
-    """
-    with open(path_prefix + f'/completed_dict_backup.txt', 'w') as outfile:
-        outfile.write(str(completed_dict))
-        
-    # Just in case there's an interuption while the connection is open, make a backup
-    with open(path_prefix + f'/completed_dict.txt', 'w') as outfile:
-        outfile.write(str(completed_dict))
-
 
 def get_last_completed_dict_numbers(path_prefix='data'):
     """
@@ -458,37 +416,6 @@ def get_last_uspcm_dict_numbers(path_prefix='data'):
                 edges = int(filename[start_idx:stop_idx])
 
     return (max_n, edges)
-
-
-def write_full_uspcm_dict(uspcm_dict, path_prefix='data'):
-    """
-    DEPRECATED - Use the function write_partial_uspcm_dict() 
-    
-    Writes a file (and backup) containing a nested dictionary whose innermost dictionaries are dictionaries of
-    graphs on num_verts vertices and num_edges edges that have had their spectator minor floor number calculated.
-    The keys in the innermost dictionaries are graph6_strings and the associated value is the spectator minor 
-    floor number of the graph with that graph6_string. The outer dictionary has keys of the form '4_verts' and 
-    the value associated with that key is a dictionary whose keys are of the form '5_edges'. The value associated 
-    with uspcm_dict['4_verts']['5_edges'] is a dictionary whose keys are the graph6_strings of graphs on 4
-    vertices and 5 edges whose spectator minor floor number has been calculated and the associated value is the
-    spectator minor floor of the graph with that graph6_string.
-    
-    :param uspcm_dict: A dictionary whose keys are graph6_strings of graphs on num_verts vertices and
-            num_edges edges and the associated value is the spectator minor floor number of the graph with that
-            graph6_string.
-    
-    :param path_prefix: The directory in which to save the partitioned files that can be used to rebuild
-            the dictionary of graphs and their spectator minor floor number.
-            By default, saves these files in a directory called 'data'
-    """
-    with open(path_prefix + 
-              f'/full_uspcm_dict/full_uspcm_dict_backup.txt', 'w') as outfile:
-        outfile.write(str(uspcm_dict))
-    
-    # Just in case there's an interuption while the connection is open, make a backup
-    with open(path_prefix + 
-              f'/full_uspcm_dict/full_uspcm_dict.txt', 'w') as outfile:
-        outfile.write(str(uspcm_dict))
         
         
 ## Read partial uspcm_dict for a given number of vertices and edges
